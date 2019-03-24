@@ -10,11 +10,14 @@ namespace BankApp
     /// </summary>
     class Account
     {
+        #region statics
+        private static int lastAccountNumber = 0;
+        #endregion
         #region Properties
         /// <summary>
-        /// Unique nuber for the account
+        /// Unique number for the account
         /// </summary>
-        public int AccountNumber { get; set; }
+        public int AccountNumber { get; private set; }
         /// <summary>
         /// email address of the account holder
         /// </summary>
@@ -22,7 +25,7 @@ namespace BankApp
         /// <summary>
         /// Available balance in the account
         /// </summary>
-        public decimal Balance { get; set; }
+        public decimal Balance { get; private set; }
         /// <summary>
         /// Type of account debit, credit ,etc
         /// </summary>
@@ -30,9 +33,19 @@ namespace BankApp
         /// <summary>
         /// Date account was created
         /// </summary>
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; private set; }
         #endregion
 
+        #region Constructor
+        public Account()
+        {
+            //lastAccountNumber++;
+            //AccountNumber = lastAccountNumber;
+            AccountNumber = ++lastAccountNumber;
+            CreatedDate = DateTime.Now;
+        }
+        #endregion
+        
         #region Methods
         /// <summary>
         /// Deposit money into your account

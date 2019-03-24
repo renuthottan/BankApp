@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs/BankApp/v15/Server/sqlite3
+/BankApp/bin/Debug/netcoreapp2.1
+/.vs/BankApp/v15
