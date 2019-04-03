@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BankApp
 {
     static class Bank
     {
-        public static Account CreateAccount(string emailAddress, string accountType, decimal initialDeposit)
+        public static List<Account> accounts = new List<Account>();
+
+        public static Account CreateAccount(string emailAddress, AccountType accountType, decimal initialDeposit)
         {
             var a1 = new Account
             {
@@ -18,7 +21,38 @@ namespace BankApp
             {
                 a1.Deposit(initialDeposit);
             }
-             return a1;
+
+            accounts.Add(a1);
+            return a1;
         }
+
+        public static IEnumerable<Account> GetAllAccountsForUser()
+        {
+            return accounts; 
+        }
+
+        public static void Deposit(int accountNumber, decimal amount)
+        {
+            var account = GetAccountByAccountNumer(accountNumber);
+            account.Deposit(amount);
+        }
+
+        private static Account GetAccountByAccountNumer(int accountNumber)
+        {
+            var account = accounts.SingleOrDefault(a => a.AccountNumber == accountNumber);
+            if (account == null)
+            {
+                //throw expression
+                return null;
+            }
+            return account;
+        }
+
+        public static void Withdraw(int accountNumber, decimal amount)
+        {
+            var account = GetAccountByAccountNumer(accountNumber);
+            account.Withdraw(amount);
+        }
+
     }
 }

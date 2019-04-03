@@ -4,6 +4,13 @@ using System.Text;
 
 namespace BankApp
 {
+    enum AccountType
+    {
+        Checkings,
+        Savings,
+        CD,
+        Loan
+    }
     /// <summary>
     /// Account that represents Bank account
     /// you can deposit or withdraw money here
@@ -29,7 +36,7 @@ namespace BankApp
         /// <summary>
         /// Type of account debit, credit ,etc
         /// </summary>
-        public string AccountType { get; set; }
+        public AccountType AccountType { get; set; }
         /// <summary>
         /// Date account was created
         /// </summary>
