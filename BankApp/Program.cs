@@ -25,22 +25,43 @@ namespace BankApp
                         Console.WriteLine("Thank you for visiting the bank!");
                         return;
                     case "1":
-                        Console.Write("Email Address: ");
-                        var emailAddress = Console.ReadLine();
-
-                        var accountTypes = Enum.GetNames(typeof(AccountType));
-                        for (int i = 0; i < accountTypes.Length; i++)
+                        try
                         {
-                            Console.WriteLine($"{i}.{accountTypes[i]}");
+                            Console.Write("Email Address: ");
+                            var emailAddress = Console.ReadLine();
+
+                            var accountTypes = Enum.GetNames(typeof(AccountType));
+                            for (int i = 0; i < accountTypes.Length; i++)
+                            {
+                                Console.WriteLine($"{i}.{accountTypes[i]}");
+                            }
+                            Console.Write("Account Type: ");
+                            var accountType = Enum.Parse<AccountType>(Console.ReadLine());
+
+                            Console.Write("Amount to deposit");
+                            var amount = Convert.ToDecimal(Console.ReadLine());
+
+                            var a1 = Bank.CreateAccount(emailAddress, accountType, amount);
+                            Console.WriteLine($"AN : {a1.AccountNumber}, EA: {a1.EmailAddress}, Balance: {a1.Balance:C}, AT: {a1.AccountType}, CD: {a1.CreatedDate}");
                         }
-                        Console.Write("Account Type: ");
-                        var accountType = Enum.Parse<AccountType>(Console.ReadLine());
+                        catch (ArgumentNullException nx)
+                        {
+                            Console.WriteLine($"Email error. Please try again!- {nx.Message}");
 
-                        Console.Write("Amount to deposit");
-                        var amount = Convert.ToDecimal(Console.ReadLine());
-
-                        var a1 = Bank.CreateAccount(emailAddress, accountType, amount);
-                        Console.WriteLine($"AN : {a1.AccountNumber}, EA: {a1.EmailAddress}, Balance: {a1.Balance:C}, AT: {a1.AccountType}, CD: {a1.CreatedDate}");
+                        }
+                        catch (ArgumentException ax)
+                        {
+                            Console.WriteLine($"Account type Error- {ax.Message} - Please try again");
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Amount error. Please provide a valid amount. Try again");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Sorry something went wrong- {ex.Message}");
+                        }
+                        
                         break;
                     case "2":
                         PrintAllAccounts();
@@ -52,13 +73,21 @@ namespace BankApp
                         Console.WriteLine("Desposit successfully completed!");
                         break;
                     case "3":
-                        PrintAllAccounts();
-                        Console.Write("Account Number: ");
-                        accountNumber = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Amount to ithdraw: ");
-                        var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
-                        Bank.Withdraw(accountNumber, withdrawAmount);
-                        Console.WriteLine("Withdrawal successfully completed!");
+                        try
+                        {
+                            PrintAllAccounts();
+                            Console.Write("Account Number: ");
+                            accountNumber = Convert.ToInt32(Console.ReadLine());
+                            Console.Write("Amount to withdraw: ");
+                            var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
+                            Bank.Withdraw(accountNumber, withdrawAmount);
+                            Console.WriteLine("Withdrawal successfully completed!");
+                        }
+                        catch (ArgumentNullException nx)
+                        {
+                            Console.WriteLine($" Account number does not exist- {nx.Message}");
+
+                        }
                         break;
                     case "4":
                         PrintAllAccounts();
