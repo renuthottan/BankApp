@@ -17,6 +17,8 @@ namespace BankApp
                 Console.WriteLine("2. Deposit");
                 Console.WriteLine("3. Withdraw");
                 Console.WriteLine("4. Print my accounts");
+                Console.WriteLine("5. Print my transactions");
+
                 Console.Write("Select an option");
                 var option = Console.ReadLine();
                 switch (option)
@@ -53,10 +55,7 @@ namespace BankApp
                         {
                             Console.WriteLine($"Account type Error- {ax.Message} - Please try again");
                         }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine($"Amount error. Please provide a valid amount. Try again");
-                        }
+                         
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Sorry something went wrong- {ex.Message}");
@@ -92,6 +91,9 @@ namespace BankApp
                     case "4":
                         PrintAllAccounts();
                         break;
+                    case "5":
+                        PrintAllTransactions();
+                        break;
                     default:
                         break;
                 }
@@ -101,9 +103,23 @@ namespace BankApp
 
         }
 
+        private static void PrintAllTransactions()
+        {
+            PrintAllAccounts();
+            Console.Write("Account number: ");
+            var accountNumber = Convert.ToInt32(Console.ReadLine());
+            var transactions = Bank.GetTransactionsForAccountNumber(accountNumber);
+            foreach (var transaction in transactions)
+            {
+                Console.WriteLine($"Id: {transaction.TransactionId}, Date: {transaction.TransactionDate}, Type: {transaction.TransactionType}, Amount: {transaction.Amount}");
+            }
+        }
+
         private static void PrintAllAccounts()
         {
-            var accounts = Bank.GetAllAccountsForUser();
+            Console.Write("Email Address");
+            var emailAddress = Console.ReadLine();
+            var accounts = Bank.GetAllAccountsForUser(emailAddress);
             foreach (var account in accounts)
             {
                 Console.WriteLine($"AN : {account.AccountNumber}, EA: {account.EmailAddress}, Balance: {account.Balance:C}, AT: {account.AccountType}, CD: {account.CreatedDate}");

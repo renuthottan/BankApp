@@ -7,8 +7,7 @@ namespace BankApp
 {
     static class Bank
     {
-        public static List<Account> accounts = new List<Account>();
-        public static List<Transaction> transactions = new List<Transaction>();
+        private static BankContext db = new BankContext();
 
         /// <summary>
         /// Creates an account in the bank
@@ -36,14 +35,23 @@ namespace BankApp
                 a1.Deposit(initialDeposit);
             }
 
-            accounts.Add(a1);
+            db.Accounts.Add(a1);
+            db.SaveChanges();
             return a1;
         }
 
-        public static IEnumerable<Account> GetAllAccountsForUser()
+        public static IEnumerable<Account> GetAllAccountsForUser(string emailAddress)
         {
-            return accounts; 
+            return db.Accounts.Where(a => a.EmailAddress == emailAddress); 
         }
+
+        public static IEnumerable<Transaction> GetTransactionsForAccountNumber(int accountNumber)
+        {
+            return db.Transactions
+                .Where(t => t.AccountNumber == accountNumber)
+                .OrderByDescending(t => t.TransactionDate);
+        }
+
 
         public static void Deposit(int accountNumber, decimal amount)
         {
@@ -55,16 +63,17 @@ namespace BankApp
                 TransactionType = TransactionType.Credit,
                 Description = "Bank deposit",
                 Amount = amount,
-                Accountnumber = accountNumber
+                AccountNumber = accountNumber
 
             };
-            transactions.Add(transaction);
+            db.Transactions.Add(transaction);
+            db.SaveChanges();
 
         }
 
         private static Account GetAccountByAccountNumer(int accountNumber)
         {
-            var account = accounts.SingleOrDefault(a => a.AccountNumber == accountNumber);
+            var account = db.Accounts.SingleOrDefault(a => a.AccountNumber == accountNumber);
             if (account == null)
             {
                 throw new ArgumentNullException("account", "account number is invalid");
@@ -87,10 +96,11 @@ namespace BankApp
                 TransactionType = TransactionType.Debit,
                 Description = "Bank withdrawal",
                 Amount = amount,
-                Accountnumber = accountNumber
+                AccountNumber = accountNumber
 
             };
-            transactions.Add(transaction);
+            db.Transactions.Add(transaction);
+            db.SaveChanges();
 
         }
 
